@@ -37,9 +37,11 @@ public class ResourceServer extends Server {
         String resourcePath = this.resourceLocation + uri;
         LOG.debug("Attempting to serve resource @ " + resourcePath);
 
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = this.getClass().getResourceAsStream(resourcePath);
 
-        InputStream is = classloader.getResourceAsStream(resourcePath);
+        if(is == null) {
+            is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
+        }
 
         if(isAvailable(is)) {
             LOG.debug("Serving resource: " + resourcePath);
